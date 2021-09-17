@@ -1,17 +1,22 @@
 import discord
 from discord.ext import commands
-import music
-
-print('Start')
+from music import Player
 
 #TODO: Add menu de interacao com o bot
 #TODO: Add error handle
 
-cogs = [music]
+intents = discord.Intents.default()
+intents.members = True
 
-client = commands.Bot(command_prefix = "?")
+bot = commands.Bot(command_prefix = "?", intents = intents)
 
-for i in range(len(cogs)):
-  cogs[i].setup(client)
+@bot.event
+async def on_ready():
+    print(f"Pai ta On {bot.user.name}")
 
-client.run("ODg4MTA4MDI2MjAzMTExNDM1.YUN5DQ.wsWy4gZ4R-0CYla6Nr4WSqnvG9M")
+async def setup():
+  await bot.wait_until_ready()
+  bot.add_cog(Player(bot))
+
+bot.loop.create_task(setup())
+bot.run("ODg4MTA4MDI2MjAzMTExNDM1.YUN5DQ.wsWy4gZ4R-0CYla6Nr4WSqnvG9M")
