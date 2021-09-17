@@ -1,0 +1,9 @@
+[buildpack]
+name = "Python"
+
+[publish.Ignore]
+files = [
+  "main.py",
+  "music.py",
+  "requirements.txt",
+]
