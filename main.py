@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from music import Player
+import keep_alive
 
 #TODO: Add menu de interacao com o bot
 #TODO: Add error handle
@@ -17,6 +18,9 @@ async def on_ready():
 async def setup():
   await bot.wait_until_ready()
   bot.add_cog(Player(bot))
+
+#Start webservice
+keep_alive.keep_alive()
 
 bot.loop.create_task(setup())
 bot.run("ODg4MTA4MDI2MjAzMTExNDM1.YUN5DQ.wsWy4gZ4R-0CYla6Nr4WSqnvG9M")
