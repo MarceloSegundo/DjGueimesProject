@@ -104,6 +104,17 @@ docs = ["sphinx (==3.0.3)", "sphinxcontrib-trio (==1.1.2)", "sphinxcontrib-websu
 voice = ["PyNaCl (>=1.3.0,<1.5)"]
 
 [[package]]
+name = "discord.py-snippets"
+version = "0.0.4"
+description = "A package with discord.py snipets"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+"discord.py" = "*"
+
+[[package]]
 name = "express"
 version = "1.0"
 description = "express"
@@ -260,7 +271,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "11043789f9f388c251705bfac45ef160414382e79d0d4f8f52a680ddea40213d"
+content-hash = "ab94d8bfad08a15e642b0a01bbb90a97ef95fc498fb22ef7800452dc78d55373"
 
 [metadata.files]
 aiohttp = [
@@ -376,6 +387,9 @@ discord = [
 "discord.py" = [
     {file = "discord.py-1.7.3-py3-none-any.whl", hash = "sha256:c6f64db136de0e18e090f6752ea68bdd4ab0a61b82dfe7acecefa22d6477bb0c"},
     {file = "discord.py-1.7.3.tar.gz", hash = "sha256:462cd0fe307aef8b29cbfa8dd613e548ae4b2cb581d46da9ac0d46fb6ea19408"},
+]
+"discord.py-snippets" = [
+    {file = "Discord.py-Snippets-0.0.4.tar.gz", hash = "sha256:48957387a83fb2469aaf136ab41e09b076f2d21e3be08d1e50a64608be1bce13"},
 ]
 express = [
     {file = "express-1.0.zip", hash = "sha256:9f16cc3e162264dc07fccfe92698bd5fee54d633e0076854b9a560fc4eba86a7"},

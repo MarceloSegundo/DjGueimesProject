@@ -7,20 +7,35 @@ from discord.ext import commands
 
 class Player(commands.Cog):
     def __init__(self, bot):
+        print("Initializing...")
         self.bot = bot
         self.song_queue = {}
 
         self.setup()
 
     def setup(self):
+        print(f"Guilds: {self.bot.guilds}")
         for guild in self.bot.guilds:
             self.song_queue[guild.id] = []
+        print(f"Voice Clients: {self.bot.voice_clients}")
 
     async def check_queue(self, ctx):
+        print("----------------check_queue---------------")
+        print(f"songQueueInit: {self.song_queue[ctx.guild.id]}")
+        
         if len(self.song_queue[ctx.guild.id]) > 0:
+            self.vaiTocar = True
+            print("Tem elemento na queue")
             ctx.voice_client.stop()
+            print(f" songQueueFirst: {self.song_queue[ctx.guild.id][0]}")
             await self.play_song(ctx, self.song_queue[ctx.guild.id][0])
             self.song_queue[ctx.guild.id].pop(0)
+            return None
+
+        ctx.voice_client.stop()   
+
+        print(f" songQueueFinal: {self.song_queue[ctx.guild.id]}")
+        print("------------------------------------")
 
     async def search_song(self, amount, song, get_url=False):
         info = await self.bot.loop.run_in_executor(
@@ -37,8 +52,8 @@ class Player(commands.Cog):
 
     async def play_song(self, ctx, song):
         url = pafy.new(song).getbestaudio().url
-        ctx.voice_client.play(discord.PCMVolumeTransformer(
-            discord.FFmpegPCMAudio(url)),
+        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
+        ctx.voice_client.play(source,
                               after=lambda error: self.bot.loop.create_task(
                                   self.check_queue(ctx)))
         #Volume padrao
@@ -48,6 +63,12 @@ class Player(commands.Cog):
     #faz o bot entrar no channel
     @commands.command()
     async def chama(self, ctx):
+
+        #for debug
+        print("----------------Chama---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print("------------------------------------")
+
         if ctx.author.voice is None:
             return await ctx.send("Não tá no canal, otário")
 
@@ -59,6 +80,12 @@ class Player(commands.Cog):
     #faz o bot sair do channel
     @commands.command()
     async def vaza(self, ctx):
+
+        #for debug
+        print("----------------Vaza---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print("------------------------------------")
+
         if ctx.voice_client is not None:
             return await ctx.voice_client.disconnect()
 
@@ -67,6 +94,13 @@ class Player(commands.Cog):
     #busca no yt a musica ou toca a url
     @commands.command()
     async def toca(self, ctx, *, song=None):
+
+        #for debug
+        print("----------------Toca---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(f" Song: {song}")
+        
+
         if song is None:
             return await ctx.send("Lança a braba")
 
@@ -79,35 +113,52 @@ class Player(commands.Cog):
             await ctx.send("To procurando, pera ae, vai demorar")
 
             result = await self.search_song(1, song, get_url=True)
+            print(f" resultSongNotLink: {result}")
 
             if result is None:
                 return await ctx.send("Achei não, cabeça de pica")
 
             song = result[0]
+            print(f" songWithResult: {song}")
 
         if ctx.voice_client.source is not None:
+            print(f" voice_client.source: {ctx.voice_client.source}")
+            print(f" voice_client.isPlaying: {ctx.voice_client.is_playing()}")
+
             queue_len = len(self.song_queue[ctx.guild.id])
+            print(f" queueLen: {queue_len}")
+
             #Tamanho maximo da queue
             queue_len_max = 50
 
             if queue_len < queue_len_max:
                 self.song_queue[ctx.guild.id].append(song)
+                print("------------------------------------")
                 return await ctx.send(
                     f"Já tem uma tocando, essa aqui vai na posição {queue_len+1} da fila"
                 )
             else:
+                print("------------------------------------")
                 return await ctx.send(
                     f"Mano, mais que {queue_len_max} tá de sacanagem né")
 
+        print("------------------------------------")
         await self.play_song(ctx, song)
 
     #busca no yt a musica ou toca a url
     @commands.command()
     async def tocar(self, ctx, *, song=None):
+
+        #for debug
+        print("----------------Tocar---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+
         if song is None:
+            print("------------------------------------")
             return await ctx.send("Lança a braba")
 
         if ctx.voice_client is None:
+            print("------------------------------------")
             return await ctx.send(
                 "Tem que conectar no canal pra tocar, jumento")
 
@@ -116,31 +167,48 @@ class Player(commands.Cog):
             await ctx.send("To procurando, pera ae, vai demorar")
 
             result = await self.search_song(1, song, get_url=True)
+            print(f" resultSongNotLink: {result}")
 
             if result is None:
+                print("------------------------------------")
                 return await ctx.send("Achei não, cabeça de pica")
 
             song = result[0]
+            print(f" songWithResult: {song}")
 
         if ctx.voice_client.source is not None:
+            print(f" voice_client.source: {ctx.voice_client.source}")
+            print(f" voice_client.isPlaying: {ctx.voice_client.is_playing}")
+            
             queue_len = len(self.song_queue[ctx.guild.id])
+            print(f" queueLen: {queue_len}")
+
             #Tamanho maximo da queue
             queue_len_max = 50
 
             if queue_len < queue_len_max:
                 self.song_queue[ctx.guild.id].append(song)
+                print("------------------------------------")
                 return await ctx.send(
                     f"Já tem uma tocando, essa aqui vai na posição {queue_len+1} da fila"
                 )
             else:
+                print("------------------------------------")
                 return await ctx.send(
                     f"Mano, mais que {queue_len_max} tá de sacanagem né")
 
+        print("------------------------------------")
         await self.play_song(ctx, song)
 
     #faz uma busca e traz os cinco primeiros resultados pra copiar a url
     @commands.command()
     async def buscar(self, ctx, *, song=None):
+
+        #for debug
+        print("----------------buscar---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print("------------------------------------")
+
         if song is None:
             return await ctx.send(
                 "Tem que colocar a música pra pesquisar, burrão")
@@ -165,6 +233,12 @@ class Player(commands.Cog):
     #mostra a queue atual
     @commands.command()
     async def fila(self, ctx):  #mostra a fila da guild
+
+        #for debug
+        print("----------------Fila---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print("------------------------------------")
+
         if len(self.song_queue[ctx.guild.id]) == 0:
             return await ctx.send("NÃO TEM NADA AQUI!!!!! C A V A L O")
 
@@ -183,6 +257,12 @@ class Player(commands.Cog):
 
     @commands.command()
     async def lista(self, ctx):  #mostra a fila da guild
+
+        #for debug
+        print("----------------Lista---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print("------------------------------------")
+
         if len(self.song_queue[ctx.guild.id]) == 0:
             return await ctx.send("NÃO TEM NADA AQUI!!!!! C A V A L O")
 
@@ -202,6 +282,12 @@ class Player(commands.Cog):
     #inicia a votacao pra skipar
     @commands.command()
     async def skip(self, ctx):
+
+        #for debug
+        print("----------------Skip---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print("------------------------------------")
+
         if ctx.voice_client is None:
             return await ctx.send("Não to tocando nada, tu é surdo?")
 
@@ -274,6 +360,12 @@ class Player(commands.Cog):
     #pausa o que ta tocando
     @commands.command()
     async def pause(self, ctx):
+
+        #for debug
+        print("----------------Pause---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print("------------------------------------")
+
         if ctx.voice_client.is_playing():
             ctx.voice_client.pause()
         else:
@@ -282,6 +374,12 @@ class Player(commands.Cog):
     #retoma o que ta pausado
     @commands.command()
     async def play(self, ctx):
+
+        #for debug
+        print("----------------Play---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print("------------------------------------")
+
         if ctx.voice_client.is_paused():
             ctx.voice_client.resume()
         else:
@@ -291,6 +389,12 @@ class Player(commands.Cog):
     #TODO: add um filtro pra quem pode skipar
     @commands.command()
     async def fs(self, ctx):
+
+        #for debug
+        print("----------------Fs---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print("------------------------------------")
+
         if ctx.voice_client is None:
             return await ctx.send("Não to tocando nada, tu é surdo?")
 
@@ -305,6 +409,12 @@ class Player(commands.Cog):
 
     @commands.command()
     async def comandos(self, ctx):
+
+        #for debug
+        print("----------------Comandos---------------")
+        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print("------------------------------------")
+
         embed = discord.Embed(
             title="Lista de Comandos",
             description=
