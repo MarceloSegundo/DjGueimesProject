@@ -100,7 +100,7 @@ class Player(commands.Cog):
                     f"Mano, mais que {queue_len_max} tá de sacanagem né")
 
         await self.play_song(ctx, song)
-    
+
     #busca no yt a musica ou toca a url
     @commands.command()
     async def tocar(self, ctx, *, song=None):
@@ -246,7 +246,8 @@ class Player(commands.Cog):
 
         if votes[u"\u2705"] > 0:
             if votes[u"\U0001F6AB"] == 0 or votes[u"\u2705"] / (
-                    votes[u"\u2705"] + votes[u"\U0001F6AB"]) > 0.60:   # votacao passa se maior que 50
+                    votes[u"\u2705"] + votes[u"\U0001F6AB"]
+            ) > 0.60:  # votacao passa se maior que 50
                 skip = True
                 embed = discord.Embed(
                     title="Skipada",
@@ -273,40 +274,41 @@ class Player(commands.Cog):
     #pausa o que ta tocando
     @commands.command()
     async def pause(self, ctx):
-      if ctx.voice_client.is_playing():
-        ctx.voice_client.pause()
-      else:
-        await ctx.send("Nem ta tocando nada, doidão")
+        if ctx.voice_client.is_playing():
+            ctx.voice_client.pause()
+        else:
+            await ctx.send("Nem ta tocando nada, doidão")
 
     #retoma o que ta pausado
     @commands.command()
     async def play(self, ctx):
-      if ctx.voice_client.is_paused():
-        ctx.voice_client.resume()
-      else:
-        await ctx.send("Nem tem nada pausado, tá na noia?")
+        if ctx.voice_client.is_paused():
+            ctx.voice_client.resume()
+        else:
+            await ctx.send("Nem tem nada pausado, tá na noia?")
 
     #forca o skip sem nenhuma votacao
     #TODO: add um filtro pra quem pode skipar
     @commands.command()
     async def fs(self, ctx):
-      if ctx.voice_client is None:
+        if ctx.voice_client is None:
             return await ctx.send("Não to tocando nada, tu é surdo?")
 
-      if ctx.author.voice is None:
+        if ctx.author.voice is None:
             return await ctx.send("Tem que estar em um canal, burrão")
 
-      if ctx.author.voice.channel.id != ctx.voice_client.channel.id:
+        if ctx.author.voice.channel.id != ctx.voice_client.channel.id:
             return await ctx.send("Não to tocando no teu canal, bolsominion")
-      
-      ctx.voice_client.stop()
-      await self.check_queue(ctx)
+
+        ctx.voice_client.stop()
+        await self.check_queue(ctx)
 
     @commands.command()
     async def comandos(self, ctx):
-      embed = discord.Embed(title="Lista de Comandos",
-                description="?chama - Chama o Bot pro canal\n ?vaza - Faz o bot vazar da call :c\n ?toca ou ?tocar - Toca a musica, é obvio\n ?lista ou ?fila - Exibe a playlist atual\n ?buscar - Ele procura as musicas e da só o link pra tu copiar\n ?skip - Abre uma votacao pra skipar a musica\n ?play e ?pause - Eles fazem isso ai mesmo",
-                colour=discord.Colour.dark_gold())
-      embed.set_footer(text="Se leu é gay")
-      await ctx.send(embed=embed)
-
+        embed = discord.Embed(
+            title="Lista de Comandos",
+            description=
+            "?chama - Chama o Bot pro canal\n ?vaza - Faz o bot vazar da call :c\n ?toca ou ?tocar - Toca a musica, é obvio\n ?lista ou ?fila - Exibe a playlist atual\n ?buscar - Ele procura as musicas e da só o link pra tu copiar\n ?skip - Abre uma votacao pra skipar a musica\n ?play e ?pause - Eles fazem isso ai mesmo",
+            colour=discord.Colour.dark_gold())
+        embed.set_footer(text="Se leu é gay")
+        await ctx.send(embed=embed)
