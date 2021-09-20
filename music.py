@@ -22,7 +22,7 @@ class Player(commands.Cog):
     async def check_queue(self, ctx):
         print("----------------check_queue---------------")
         print(f"songQueueInit: {self.song_queue[ctx.guild.id]}")
-        
+
         if len(self.song_queue[ctx.guild.id]) > 0:
             self.vaiTocar = True
             print("Tem elemento na queue")
@@ -32,7 +32,7 @@ class Player(commands.Cog):
             self.song_queue[ctx.guild.id].pop(0)
             return None
 
-        ctx.voice_client.stop()   
+        ctx.voice_client.stop()
 
         print(f" songQueueFinal: {self.song_queue[ctx.guild.id]}")
         print("------------------------------------")
@@ -66,7 +66,9 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Chama---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print("------------------------------------")
 
         if ctx.author.voice is None:
@@ -83,7 +85,9 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Vaza---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print("------------------------------------")
 
         if ctx.voice_client is not None:
@@ -97,16 +101,23 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Toca---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print(f" Song: {song}")
-        
 
         if song is None:
+            print("------------------------------------")
             return await ctx.send("Lança a braba")
 
         if ctx.voice_client is None:
+            await ctx.author.voice.channel.connect()
+
+        print(f" ChannelAuthor: {ctx.author}")
+
+        if ctx.voice_client.channel != ctx.author.voice.channel:
             return await ctx.send(
-                "Tem que conectar no canal pra tocar, jumento")
+                "Tem que estar no mesmo canal do bot pra lançar a braba")
 
         #handle song nao eh url
         if not ("youtube.com/watch?" in song or "https://youtu.be/" in song):
@@ -116,6 +127,7 @@ class Player(commands.Cog):
             print(f" resultSongNotLink: {result}")
 
             if result is None:
+                print("------------------------------------")
                 return await ctx.send("Achei não, cabeça de pica")
 
             song = result[0]
@@ -151,16 +163,20 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Tocar---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
 
         if song is None:
             print("------------------------------------")
             return await ctx.send("Lança a braba")
 
         if ctx.voice_client is None:
-            print("------------------------------------")
+            await ctx.author.voice.channel.connect()
+
+        if ctx.voice_client.channel != ctx.author.voice.channel:
             return await ctx.send(
-                "Tem que conectar no canal pra tocar, jumento")
+                "Tem que estar no mesmo canal do bot pra lançar a braba")
 
         #handle song nao eh url
         if not ("youtube.com/watch?" in song or "https://youtu.be/" in song):
@@ -179,7 +195,7 @@ class Player(commands.Cog):
         if ctx.voice_client.source is not None:
             print(f" voice_client.source: {ctx.voice_client.source}")
             print(f" voice_client.isPlaying: {ctx.voice_client.is_playing}")
-            
+
             queue_len = len(self.song_queue[ctx.guild.id])
             print(f" queueLen: {queue_len}")
 
@@ -206,7 +222,9 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------buscar---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print("------------------------------------")
 
         if song is None:
@@ -236,7 +254,9 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Fila---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print("------------------------------------")
 
         if len(self.song_queue[ctx.guild.id]) == 0:
@@ -260,7 +280,9 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Lista---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print("------------------------------------")
 
         if len(self.song_queue[ctx.guild.id]) == 0:
@@ -285,7 +307,9 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Skip---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print("------------------------------------")
 
         if ctx.voice_client is None:
@@ -363,7 +387,9 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Pause---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print("------------------------------------")
 
         if ctx.voice_client.is_playing():
@@ -377,7 +403,9 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Play---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print("------------------------------------")
 
         if ctx.voice_client.is_paused():
@@ -392,7 +420,9 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Fs---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print("------------------------------------")
 
         if ctx.voice_client is None:
@@ -412,7 +442,9 @@ class Player(commands.Cog):
 
         #for debug
         print("----------------Comandos---------------")
-        print(f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}")
+        print(
+            f" Content_MSG: {ctx.message.content} \n Quem_escreveu: {ctx.author} \n QualCanal: {ctx.message.channel}"
+        )
         print("------------------------------------")
 
         embed = discord.Embed(
