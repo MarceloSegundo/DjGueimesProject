@@ -2,8 +2,9 @@ import discord
 from discord.ext import commands
 from music import Player
 import keep_alive
+import os
 
-TOKEN = "ODg4MTA4MDI2MjAzMTExNDM1.YUN5DQ.wsWy4gZ4R-0CYla6Nr4WSqnvG9M"
+TOKEN = os.environ['BOT_TOKEN']
 
 #TODO: Add menu de interacao com o bot
 #TODO: Sair da call quando ocioso

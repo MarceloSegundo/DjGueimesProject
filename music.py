@@ -21,7 +21,7 @@ class Player(commands.Cog):
 
     async def check_queue(self, ctx):
         print("----------------check_queue---------------")
-        print(f"songQueueInit: {self.song_queue[ctx.guild.id]}")
+        print(f" songQueueInit: {self.song_queue[ctx.guild.id]}")
 
         if len(self.song_queue[ctx.guild.id]) > 0:
             self.vaiTocar = True
@@ -53,9 +53,20 @@ class Player(commands.Cog):
     async def play_song(self, ctx, song):
         url = pafy.new(song).getbestaudio().url
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url))
+
+        #TODO: Add um timer para o disconnect
+        def player_after(error):
+          coro = ctx.voice_client.disconnect()
+          fut = asyncio.run_coroutine_threadsafe(coro, self.bot.loop)
+          
+          try:
+              fut.result()
+          except:
+              # an error happened sending the message
+              pass
+
         ctx.voice_client.play(source,
-                              after=lambda error: self.bot.loop.create_task(
-                                  self.check_queue(ctx)))
+                              after=player_after)
         #Volume padrao
         ctx.voice_client.source.volume = 0.5
         await ctx.send(f"Lançando a braba: {song}")
