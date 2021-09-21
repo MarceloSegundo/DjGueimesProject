@@ -4,10 +4,10 @@ from music import Player
 import keep_alive
 import os
 
-TOKEN = os.environ['BOT_TOKEN']
+TOKEN = os.environ['TOKEN']
 
 #TODO: Add menu de interacao com o bot
-#TODO: Sair da call quando ocioso
+#TODO: Sair da call quando ocioso apos um tempo
 
 intents = discord.Intents.default()
 intents.members = True
