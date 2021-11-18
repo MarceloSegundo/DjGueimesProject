@@ -9,6 +9,7 @@ TOKEN = os.environ['TOKEN']
 #TODO: Add menu de interacao com o bot
 #TODO: Sair da call quando ocioso apos um tempo
 #Apresentacao commit
+#apresentacao 2
 
 intents = discord.Intents.default()
 intents.members = True
